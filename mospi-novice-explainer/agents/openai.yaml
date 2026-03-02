@@ -1,0 +1,3 @@
+display_name: MoSPI Novice Explainer
+short_description: Explains MoSPI terms in plain, beginner-friendly language
+default_prompt: Explain this MoSPI indicator for a complete beginner with a small example and compare it with the closest related term.

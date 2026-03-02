@@ -1,0 +1,12 @@
+{
+  "metric_id": "electricity_per_capita_ktoe",
+  "year": "2023-24",
+  "top": [
+    { "rank": 1, "state_code": "GJ", "state_name": "Gujarat", "value": 1.42, "data_completeness": 0.98 },
+    { "rank": 2, "state_code": "TN", "state_name": "Tamil Nadu", "value": 1.31, "data_completeness": 0.97 }
+  ],
+  "bottom": [
+    { "rank": 1, "state_code": "BR", "state_name": "Bihar", "value": 0.42, "data_completeness": 0.96 },
+    { "rank": 2, "state_code": "UP", "state_name": "Uttar Pradesh", "value": 0.51, "data_completeness": 0.95 }
+  ]
+}

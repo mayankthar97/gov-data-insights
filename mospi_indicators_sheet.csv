@@ -1,0 +1,105 @@
+dataset,frequency_code,indicator_code,indicator_name,notes
+PLFS,1,1,LFPR (Labour Force Participation Rate),Percent of population that is in labour force
+PLFS,1,2,WPR (Worker Population Ratio),Percent of population that is employed
+PLFS,1,3,UR (Unemployment Rate),Percent of labour force that is unemployed
+PLFS,1,4,Percentage distribution of workers,Share of workers across categories
+PLFS,1,5,Regular wage/salaried employees by employment condition,Share by type of employment condition
+PLFS,1,6,Average wage/salary from regular wage/salaried employment,Monthly average earnings (Rs)
+PLFS,1,7,Average daily wage from casual labour (excluding public works),Daily average earnings (Rs)
+PLFS,1,8,Average gross earnings from self-employment,Last 30 days average earnings (Rs)
+NAS,1,1,Gross Value Added,Value of goods/services produced minus intermediate consumption
+NAS,1,2,Net Taxes on Products,Taxes on products minus subsidies on products
+NAS,1,3,Taxes on Products,Taxes linked to production/sale of products
+NAS,1,4,Subsidies on Products,Government subsidies linked to products
+NAS,1,5,Gross Domestic Product,Total value added plus net taxes on products
+NAS,1,6,Consumption of Fixed Capital,Depreciation of fixed assets
+NAS,1,7,Net Domestic Product,GDP minus consumption of fixed capital
+NAS,1,8,Gross Capital Formation by Industry of Use,Investment by using industries
+NAS,1,9,Gross Fixed Capital Formation,Investment in fixed assets
+NAS,1,10,Private Final Consumption Expenditure,Household and NPISH final consumption
+NAS,1,11,Government Final Consumption Expenditure,Government final consumption spending
+NAS,1,12,Change in Stock,Change in inventories
+NAS,1,13,Valuables,Net acquisition of valuables
+NAS,1,14,Export of Goods and Services,Exports at macro level
+NAS,1,15,Import of Goods and Services,Imports at macro level
+NAS,1,16,Primary Income Receivable Net From RoW,Primary income net from Rest of World
+NAS,1,17,Gross National Income,GDP plus net primary income from RoW
+NAS,1,18,Other Current Transfers Net From RoW,Current transfers net from Rest of World
+NAS,1,19,Gross National Disposable Income,GNI plus net current transfers from RoW
+NAS,1,20,Gross Saving,Income not consumed
+NAS,1,21,GVA Growth Rate,Year-on-year growth in GVA
+NAS,1,22,GDP Growth Rate,Year-on-year growth in GDP
+NAS,2,1,Gross Value Added (Quarterly),Quarterly series
+NAS,2,2,Net Taxes on Products (Quarterly),Quarterly series
+NAS,2,5,Gross Domestic Product (Quarterly),Quarterly series
+NAS,2,9,Gross Fixed Capital Formation (Quarterly),Quarterly series
+NAS,2,10,Private Final Consumption Expenditure (Quarterly),Quarterly series
+NAS,2,11,Government Final Consumption Expenditure (Quarterly),Quarterly series
+NAS,2,12,Change in Stock (Quarterly),Quarterly series
+NAS,2,13,Valuables (Quarterly),Quarterly series
+NAS,2,14,Export of Goods and Services (Quarterly),Quarterly series
+NAS,2,15,Import of Goods and Services (Quarterly),Quarterly series
+NAS,2,21,GVA Growth Rate (Quarterly),Quarterly series
+NAS,2,22,GDP Growth Rate (Quarterly),Quarterly series
+ENERGY,,1,Energy Balance (KToE),Energy balance in thousand tonnes of oil equivalent
+ENERGY,,2,Energy Balance (PetaJoules),Energy balance in petajoules
+ASI,,1,Number of Factories,Count of factories
+ASI,,2,Factories in Operation,Factories actually operating
+ASI,,3,Fixed Capital,Value of fixed capital
+ASI,,4,Physical Working Capital,Physical component of working capital
+ASI,,5,Working Capital,Total working capital
+ASI,,6,Invested Capital,Capital invested in operations
+ASI,,7,Gross Value of Addition to Fixed Capital,Addition to fixed capital
+ASI,,8,Rent Paid for Fixed Assets,Rent outgo for fixed assets
+ASI,,9,Outstanding Loan,Outstanding loan liabilities
+ASI,,10,Interest Paid,Interest expenses
+ASI,,11,Rent Received for Fixed Asset,Rent income from fixed assets
+ASI,,12,Interest Received,Interest income
+ASI,,13,Gross Value of Plant & Machinery,Value of plant and machinery
+ASI,,14,Value of Product and By-Product,Value of outputs and by-products
+ASI,,15,Total Output,Total output value
+ASI,,16,Fuels Consumed,Fuel consumption value/amount category
+ASI,,17,Materials Consumed,Materials consumed
+ASI,,18,Total Inputs,Total input value
+ASI,,19,Gross Value Added,Gross value added
+ASI,,20,Depreciation,Depreciation charge
+ASI,,21,Net Value Added,Net value added
+ASI,,22,Net Fixed Capital Formation,Net fixed capital formation
+ASI,,23,Gross Fixed Capital Formation,Gross fixed capital formation
+ASI,,24,Addition in Stock of Materials/Fuels/Semi-Finished/Finished Goods,Total stock addition across stock types
+ASI,,25,Addition in Stock of Materials/Fuels,etc,Stock addition of materials/fuels
+ASI,,26,Addition in Stock of Semi-Finished Goods,Stock addition of semi-finished goods
+ASI,,27,Addition in Stock of Finished Goods,Stock addition of finished goods
+ASI,,28,Gross Capital Formation,Gross capital formation
+ASI,,29,Net Income,Net income
+ASI,,30,Net Profit,Net profit
+ASI,,31,Total Number of Persons Engaged,Total persons engaged
+ASI,,32,Total Number of Workers,Total workers
+ASI,,33,No. of Directly Employed Workers,Directly employed workers
+ASI,,34,No. of Directly Employed Male Workers,Directly employed male workers
+ASI,,35,No. of Directly Employed Female Workers,Directly employed female workers
+ASI,,36,No. of Directly Employed Children Workers,Directly employed child workers
+ASI,,37,No. of Workers Employed Through Contractors,Contract workers
+ASI,,38,No. of Employees Other Than Workers,Non-worker employees
+ASI,,39,No. of Employees Other Than Workers - Supervisory and Managerial,Supervisory/managerial employees
+ASI,,40,No. of Employees Other Than Workers - Other Employees,Other non-worker employees
+ASI,,41,Unpaid Family Members/Proprietor,etc,Unpaid family/proprietor contribution
+ASI,,42,Total Mandays Employed,Total mandays employed
+ASI,,43,Wages and Salaries Including Employer's Contribution,Compensation incl employer contribution
+ASI,,44,Wages and Salaries Including Bonus,Compensation incl bonus
+ASI,,45,Wages and Salaries,Wages and salaries total
+ASI,,46,Wages and Salary of Workers,Worker wages and salary
+ASI,,47,Wages and Salary of Supervisory & Managerial Employees,Supervisory/managerial wages and salary
+ASI,,48,Wages and Salary of Other Employees,Other employee wages and salary
+ASI,,49,Bonus to All Staff,Bonus paid
+ASI,,50,Employers' Contribution,Employer contribution
+ASI,,51,Quantity of Coal Consumed,Coal quantity consumed
+ASI,,52,Value of Coal Consumed,Coal value consumed
+ASI,,53,Quantity of Electricity Purchased and Consumed,Electricity quantity purchased/consumed
+ASI,,54,Value of Electricity Purchased and Consumed,Electricity value purchased/consumed
+ASI,,55,Value of Petroleum Products Consumed,Petroleum products value consumed
+ASI,,56,Value of Other Fuels Consumed,Other fuels value consumed
+ASI,,57,Total Value of Fuel Consumed,Total fuel value consumed
+CPI,,,,CPI uses hierarchy (Group/Item) with base years 2010, 2012, 2024
+IIP,,,,IIP uses category hierarchy by base year and frequency (monthly/annual)
+WPI,,,,WPI uses hierarchical commodity codes (group/subgroup/item)

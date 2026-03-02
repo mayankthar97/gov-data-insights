@@ -1,27 +1,24 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
 
-async function get(path) {
-  const response = await fetch(`${API_BASE_URL}${path}`);
+async function request(path, options = {}) {
+  const response = await fetch(`${API_BASE_URL}${path}`, {
+    headers: { "Content-Type": "application/json" },
+    ...options
+  });
+
   if (!response.ok) {
-    const message = await response.text();
-    throw new Error(`Request failed (${response.status}): ${message}`);
+    const text = await response.text();
+    throw new Error(`Request failed (${response.status}): ${text}`);
   }
+
   return response.json();
 }
 
 export const api = {
-  health: () => get("/health"),
-  summary: () => get("/v1/summary"),
-  metricSeries: ({ metricId, startYear, endYear }) => {
-    const q = new URLSearchParams({ metric_id: metricId });
-    if (startYear) q.set("start_year", startYear);
-    if (endYear) q.set("end_year", endYear);
-    return get(`/v1/metrics?${q.toString()}`);
-  },
-  correlation: ({ xMetricId, yMetricId, startYear, endYear }) => {
-    const q = new URLSearchParams({ x_metric_id: xMetricId, y_metric_id: yMetricId });
-    if (startYear) q.set("start_year", startYear);
-    if (endYear) q.set("end_year", endYear);
-    return get(`/v1/metrics/correlation?${q.toString()}`);
-  }
+  home: () => request("/v1/mvp/home"),
+  ask: (question) => request("/v1/mvp/ask", { method: "POST", body: JSON.stringify({ question }) }),
+  inflation: () => request("/v1/mvp/inflation"),
+  inflationImpact: (payload) => request("/v1/mvp/inflation/impact", { method: "POST", body: JSON.stringify(payload) }),
+  jobs: () => request("/v1/mvp/jobs"),
+  householdStress: () => request("/v1/mvp/household-stress")
 };

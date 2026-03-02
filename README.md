@@ -1,48 +1,58 @@
 # Electricity x GDP Insights App
 
-Interactive web app to explore electricity consumption, per-capita usage, and GDP correlation with state-level rankings and drill-down.
+Interactive national dashboard for electricity consumption and GDP correlation using actual MoSPI snapshots.
+
+## What Changed
+- Replaced synthetic mock numbers with actual MoSPI-derived national series.
+- Removed state map, rankings, and state-detail views.
+- App is now national-only because current integrated MoSPI flow here does not include state-wise filters for ENERGY/NAS endpoints used.
 
 ## Repository Layout
-- `backend/`: Express API implementing `/v1/metrics`, `/v1/map`, `/v1/rankings`, `/v1/state/:stateCode`, `/v1/metrics/correlation`
+- `backend/`: Express API (`/v1/summary`, `/v1/metrics`, `/v1/metrics/correlation`)
 - `frontend/`: React + Vite dashboard UI
-- `api/openapi.yaml`: API contract
-- `docs/`: use case + data model
+- `api/openapi.yaml`: current API contract
+- `docs/`: use case + data model notes
 
 ## Local Run
 
-### 1) Backend
+### Backend
 ```bash
 cd backend
 npm install
 npm run dev
 ```
-Backend runs on `http://localhost:8080`.
 
-### 2) Frontend
+### Frontend
 ```bash
 cd frontend
 npm install
 VITE_API_BASE_URL=http://localhost:8080 npm run dev
 ```
-Frontend runs on `http://localhost:5173`.
 
 ## Deploy
 
 ### Backend (Render)
-1. Push this repo to GitHub.
-2. In Render, create a new Web Service from the repo.
-3. Set root directory to `backend`.
-4. Build command: `npm install`
-5. Start command: `npm start`
-6. Deploy and copy backend URL (example: `https://your-api.onrender.com`).
+1. Create a Render Web Service from this repo.
+2. Root directory: `backend`
+3. Build command: `npm install`
+4. Start command: `npm start`
 
-### Frontend (GitHub Pages)
-1. In GitHub repo settings, enable Pages with "GitHub Actions" source.
-2. In GitHub repo `Settings -> Secrets and variables -> Actions -> Variables`, add:
-   - `VITE_API_BASE_URL=https://your-api.onrender.com`
-3. Push to `main` branch.
-4. Workflow `Frontend Deploy (GitHub Pages)` will publish `frontend/dist`.
+### Frontend (GitHub Pages via docs)
+```bash
+cd frontend
+npm install
+VITE_API_BASE_URL=https://<your-render-backend>.onrender.com npm run build
 
-## Data Notes
-- Current backend uses mock data shaped to your API contract.
-- Replace mock loaders in `backend/src/data/mockData.js` with MoSPI MCP ingestion and external state datasets for production.
+cd ..
+rm -rf docs/*
+cp -R frontend/dist/* docs/
+
+git add docs
+git commit -m "Deploy latest frontend build"
+git push
+```
+
+## Data Source Notes
+- ENERGY dataset: Electricity final consumption and industry consumption (KToE)
+- NAS dataset: GDP constant/current and GDP growth rate (base year 2022-23)
+- Snapshot date: 2026-03-02

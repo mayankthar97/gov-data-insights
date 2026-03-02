@@ -1,96 +1,88 @@
 import { useEffect, useMemo, useState } from "react";
+import CorrelationPanel from "./components/CorrelationPanel";
 import KpiCards from "./components/KpiCards";
 import NationalTrendChart from "./components/NationalTrendChart";
-import RankingsPanel from "./components/RankingsPanel";
-import StateDetail from "./components/StateDetail";
-import StateHeatMap from "./components/StateHeatMap";
 import { api } from "./lib/api";
 import "./styles/app.css";
 
-const YEAR = "2023-24";
-const METRIC_OPTIONS = [
-  "electricity_total_ktoe",
-  "electricity_per_capita_ktoe",
-  "electricity_intensity_ktoe_per_crore_gdp"
-];
-
 export default function App() {
-  const [metricId, setMetricId] = useState(METRIC_OPTIONS[0]);
-  const [mapData, setMapData] = useState({ values: [] });
-  const [rankings, setRankings] = useState({ top: [], bottom: [] });
-  const [stateCode, setStateCode] = useState("MH");
-  const [stateDetail, setStateDetail] = useState(null);
-  const [series, setSeries] = useState({ electricity: [], gdp: [], growth: [], industry: [] });
+  const [summary, setSummary] = useState(null);
+  const [electricitySeries, setElectricitySeries] = useState([]);
+  const [gdpSeries, setGdpSeries] = useState([]);
+  const [correlation, setCorrelation] = useState(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     Promise.all([
+      api.summary(),
       api.metricSeries({ metricId: "electricity_total_ktoe" }),
       api.metricSeries({ metricId: "gdp_constant_crore" }),
-      api.metricSeries({ metricId: "gdp_growth_rate_percent" }),
-      api.metricSeries({ metricId: "electricity_industry_ktoe" })
-    ]).then(([electricity, gdp, growth, industry]) => setSeries({ electricity, gdp, growth, industry }));
+      api.correlation({ xMetricId: "electricity_total_ktoe", yMetricId: "gdp_constant_crore" })
+    ])
+      .then(([summaryRes, electricityRes, gdpRes, correlationRes]) => {
+        setSummary(summaryRes);
+        setElectricitySeries(electricityRes.points || []);
+        setGdpSeries(gdpRes.points || []);
+        setCorrelation(correlationRes);
+      })
+      .catch((err) => {
+        setError(err.message || "Failed to load data");
+      });
   }, []);
 
-  useEffect(() => {
-    Promise.all([
-      api.map({ metricId, year: YEAR }),
-      api.rankings({ metricId, year: YEAR, n: 5 })
-    ]).then(([mapRes, rankRes]) => {
-      setMapData(mapRes);
-      setRankings(rankRes);
-    });
-  }, [metricId]);
-
-  useEffect(() => {
-    api.stateDetail(stateCode).then(setStateDetail);
-  }, [stateCode]);
-
   const trendData = useMemo(() => {
-    if (!series.electricity.points || !series.gdp.points) return [];
-    return series.electricity.points.map((point, idx) => ({
-      year: point.year,
-      electricity: point.value,
-      gdp: series.gdp.points[idx]?.value
+    const years = Array.from(new Set([...electricitySeries.map((p) => p.year), ...gdpSeries.map((p) => p.year)])).sort();
+    return years.map((year) => ({
+      year,
+      electricity: electricitySeries.find((p) => p.year === year)?.value ?? null,
+      gdp: gdpSeries.find((p) => p.year === year)?.value ?? null
     }));
-  }, [series]);
+  }, [electricitySeries, gdpSeries]);
 
-  const latestIndex = (series.electricity.points || []).length - 1;
-  const kpis = {
-    electricity: series.electricity.points?.[latestIndex]?.value,
-    gdp: series.gdp.points?.[latestIndex]?.value,
-    growth: series.growth.points?.[latestIndex]?.value,
-    industry: series.industry.points?.[latestIndex]?.value
-  };
+  if (error) {
+    return (
+      <main className="container">
+        <header className="hero">
+          <h1>Electricity x GDP Insights</h1>
+          <p className="error">{error}</p>
+        </header>
+      </main>
+    );
+  }
 
   return (
     <main className="container">
       <header className="hero">
-        <h1>Electricity x GDP Insights</h1>
+        <h1>Electricity x GDP Insights (National)</h1>
         <p>
-          Interactive analytics for electricity usage, per-capita usage, and GDP correlation.
+          Live app view built from actual MoSPI ENERGY and NAS series. State-wise views removed.
         </p>
       </header>
 
-      <KpiCards values={kpis} />
+      {summary && (
+        <KpiCards
+          values={{
+            yearElectricity: summary.year_electricity,
+            yearGdp: summary.year_gdp,
+            yearGrowth: summary.year_growth,
+            electricity: summary.electricity_ktoe,
+            industry: summary.electricity_industry_ktoe,
+            industryShare: summary.industry_share_percent,
+            gdp: summary.gdp_constant_crore,
+            growth: summary.gdp_growth_percent
+          }}
+        />
+      )}
+
       <NationalTrendChart data={trendData} />
+      <CorrelationPanel correlation={correlation} />
 
-      <section className="panel controls">
-        <h2>State Ranking Metric</h2>
-        <select value={metricId} onChange={(e) => setMetricId(e.target.value)}>
-          {METRIC_OPTIONS.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
-      </section>
-
-      <div className="two-col">
-        <StateHeatMap mapData={mapData} selectedState={stateCode} onSelect={setStateCode} />
-        <RankingsPanel data={rankings} metricId={metricId} />
-      </div>
-
-      <StateDetail detail={stateDetail} />
+      {summary && (
+        <section className="panel">
+          <h2>Data Source</h2>
+          <p className="muted">{summary.source_as_of} snapshot from MoSPI ENERGY and NAS via MCP extraction.</p>
+        </section>
+      )}
     </main>
   );
 }

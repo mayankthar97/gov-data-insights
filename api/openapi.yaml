@@ -1,359 +1,79 @@
 openapi: 3.0.3
 info:
-  title: Electricity GDP Insights API
-  version: 0.1.0
-  description: API contract for interactive electricity vs GDP analytics.
+  title: Electricity GDP Insights API (National)
+  version: 0.2.0
+  description: National-only API using actual MoSPI ENERGY and NAS snapshots.
 servers:
   - url: https://api.example.com
-
-tags:
-  - name: Health
-  - name: Metrics
-  - name: Rankings
-  - name: States
 
 paths:
   /health:
     get:
-      tags: [Health]
       summary: Health check
       responses:
         '200':
           description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: ok
+
+  /v1/summary:
+    get:
+      summary: Latest summary cards
+      responses:
+        '200':
+          description: Summary payload
 
   /v1/metrics:
     get:
-      tags: [Metrics]
-      summary: Get time-series metrics
+      summary: Get a national annual metric series
       parameters:
-        - $ref: '#/components/parameters/metricId'
-        - $ref: '#/components/parameters/geoLevel'
-        - $ref: '#/components/parameters/geoCode'
-        - $ref: '#/components/parameters/startYear'
-        - $ref: '#/components/parameters/endYear'
-        - $ref: '#/components/parameters/frequency'
+        - name: metric_id
+          in: query
+          required: true
+          schema:
+            type: string
+            enum:
+              - electricity_total_ktoe
+              - electricity_industry_ktoe
+              - gdp_constant_crore
+              - gdp_current_crore
+              - gdp_growth_rate_percent
+        - name: start_year
+          in: query
+          schema:
+            type: string
+        - name: end_year
+          in: query
+          schema:
+            type: string
       responses:
         '200':
           description: Metric series
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MetricSeriesResponse'
+        '404':
+          description: Not found
 
   /v1/metrics/correlation:
     get:
-      tags: [Metrics]
-      summary: Correlation between two metrics for a geography
+      summary: Correlation between two national metrics
       parameters:
         - name: x_metric_id
           in: query
           required: true
           schema:
             type: string
-          example: electricity_total_ktoe
         - name: y_metric_id
           in: query
           required: true
           schema:
             type: string
-          example: gdp_constant_crore
-        - $ref: '#/components/parameters/geoLevel'
-        - $ref: '#/components/parameters/geoCode'
-        - $ref: '#/components/parameters/startYear'
-        - $ref: '#/components/parameters/endYear'
-      responses:
-        '200':
-          description: Correlation summary and aligned points
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CorrelationResponse'
-
-  /v1/rankings:
-    get:
-      tags: [Rankings]
-      summary: Top and bottom performers
-      parameters:
-        - name: metric_id
+        - name: start_year
           in: query
-          required: true
           schema:
             type: string
-            enum: [electricity_total_ktoe, electricity_per_capita_ktoe, electricity_intensity_ktoe_per_crore_gdp]
-        - name: year
+        - name: end_year
           in: query
-          required: true
-          schema:
-            type: string
-            example: 2023-24
-        - name: n
-          in: query
-          required: false
-          schema:
-            type: integer
-            default: 5
-      responses:
-        '200':
-          description: Ranking response
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/RankingResponse'
-
-  /v1/map:
-    get:
-      tags: [States]
-      summary: State map payload for choropleth
-      parameters:
-        - name: metric_id
-          in: query
-          required: true
-          schema:
-            type: string
-        - name: year
-          in: query
-          required: true
           schema:
             type: string
       responses:
         '200':
-          description: State metric map values
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MapResponse'
-
-  /v1/state/{stateCode}:
-    get:
-      tags: [States]
-      summary: State detail dashboard payload
-      parameters:
-        - name: stateCode
-          in: path
-          required: true
-          schema:
-            type: string
-            example: MH
-        - $ref: '#/components/parameters/startYear'
-        - $ref: '#/components/parameters/endYear'
-      responses:
-        '200':
-          description: State detail
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/StateDetailResponse'
-
-components:
-  parameters:
-    metricId:
-      name: metric_id
-      in: query
-      required: true
-      schema:
-        type: string
-    geoLevel:
-      name: geo_level
-      in: query
-      required: false
-      schema:
-        type: string
-        enum: [national, state]
-        default: national
-    geoCode:
-      name: geo_code
-      in: query
-      required: false
-      schema:
-        type: string
-        example: IND
-    startYear:
-      name: start_year
-      in: query
-      required: false
-      schema:
-        type: string
-        example: 2014-15
-    endYear:
-      name: end_year
-      in: query
-      required: false
-      schema:
-        type: string
-        example: 2023-24
-    frequency:
-      name: frequency
-      in: query
-      required: false
-      schema:
-        type: string
-        enum: [annual, quarterly, monthly]
-
-  schemas:
-    DataPoint:
-      type: object
-      properties:
-        year:
-          type: string
-        quarter:
-          type: string
-          nullable: true
-        value:
-          type: number
-
-    MetricSeriesResponse:
-      type: object
-      properties:
-        metric_id:
-          type: string
-        metric_name:
-          type: string
-        unit:
-          type: string
-        geo_level:
-          type: string
-        geo_code:
-          type: string
-        geo_name:
-          type: string
-        frequency:
-          type: string
-        points:
-          type: array
-          items:
-            $ref: '#/components/schemas/DataPoint'
-        source:
-          type: string
-        updated_at:
-          type: string
-          format: date-time
-
-    CorrelationResponse:
-      type: object
-      properties:
-        x_metric_id:
-          type: string
-        y_metric_id:
-          type: string
-        geo_level:
-          type: string
-        geo_code:
-          type: string
-        window_start_year:
-          type: string
-        window_end_year:
-          type: string
-        points:
-          type: integer
-        pearson_r:
-          type: number
-          nullable: true
-        slope:
-          type: number
-          nullable: true
-        intercept:
-          type: number
-          nullable: true
-        aligned_series:
-          type: array
-          items:
-            type: object
-            properties:
-              year:
-                type: string
-              x_value:
-                type: number
-              y_value:
-                type: number
-
-    RankingItem:
-      type: object
-      properties:
-        rank:
-          type: integer
-        state_code:
-          type: string
-        state_name:
-          type: string
-        value:
-          type: number
-        data_completeness:
-          type: number
-
-    RankingResponse:
-      type: object
-      properties:
-        metric_id:
-          type: string
-        year:
-          type: string
-        top:
-          type: array
-          items:
-            $ref: '#/components/schemas/RankingItem'
-        bottom:
-          type: array
-          items:
-            $ref: '#/components/schemas/RankingItem'
-
-    MapResponse:
-      type: object
-      properties:
-        metric_id:
-          type: string
-        year:
-          type: string
-        geo_level:
-          type: string
-          example: state
-        values:
-          type: array
-          items:
-            type: object
-            properties:
-              state_code:
-                type: string
-              state_name:
-                type: string
-              value:
-                type: number
-                nullable: true
-              data_completeness:
-                type: number
-
-    StateDetailResponse:
-      type: object
-      properties:
-        state_code:
-          type: string
-        state_name:
-          type: string
-        electricity_series:
-          $ref: '#/components/schemas/MetricSeriesResponse'
-        gdp_series:
-          $ref: '#/components/schemas/MetricSeriesResponse'
-        per_capita_series:
-          $ref: '#/components/schemas/MetricSeriesResponse'
-        intensity_series:
-          $ref: '#/components/schemas/MetricSeriesResponse'
-        correlation:
-          $ref: '#/components/schemas/CorrelationResponse'
-        sector_breakdown:
-          type: array
-          items:
-            type: object
-            properties:
-              sector_name:
-                type: string
-              value:
-                type: number
-              unit:
-                type: string
+          description: Correlation payload
+        '404':
+          description: Not found
